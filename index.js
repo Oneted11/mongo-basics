@@ -15,15 +15,24 @@ const run = async () => {
     // console.log(movie);
     const allMovies = await collection
       .find({}, { projection: { title: 1, imdb: 1, languages: 1, awards: 1 } })
-      //   .max(100)
-    //   .maxScan(100)
-    .limit(20)
+
+      .limit(20)
       .toArray();
-    console.log(allMovies);
+    // console.log(allMovies);
+    //querying nested by nested data, gt is greater than
+    const movieratingabovequery = { "imdb.rating": { $gt: 5 } };
+    const movieratingabove5 = await collection
+      .find(movieratingabovequery)
+      .limit(20)
+      .toArray();
+    console.log("rating>5", movieratingabove5);
+  } catch {
+    console.dir;
   } finally {
     //this is executed always, like right now its closing the connection no matter what
     //ensures client will close when error/finish
     await client.close();
   }
 };
-run().catch(console.dir);
+run();
+// .catch(console.dir);
